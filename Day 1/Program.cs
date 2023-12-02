@@ -17,65 +17,105 @@
 
         private static int GetDigit(string line)
         {
-            var firstDigit = "";
-            var lastDigit = "";
-
             var contents = line.ToLower();
-
-            while (!string.IsNullOrEmpty(contents))
-            {
-                var digit = contents.Substring(0, 1);
-                if (int.TryParse(digit.ToString(), out var result))
-                {
-                    if (string.IsNullOrEmpty(firstDigit))
-                    {
-                        firstDigit = result.ToString();
-                    }
-                    else
-                    {
-                        lastDigit = result.ToString();
-                    }
-                    contents = contents.Substring(1);
-                }
-                else
-                {
-                    var digitData = GetDigitData(contents);
-                    if (digitData != -1)
-                    {
-                        if (string.IsNullOrEmpty(firstDigit))
-                        {
-                            firstDigit = digitData.ToString();
-                        }
-                        else
-                        {
-                            lastDigit = digitData.ToString();
-                        }
-                        contents = contents.Substring(1);
-                    }
-                    else
-                    {
-                        contents = contents.Substring(1);
-                    }
-                }
-            }
-
+            var firstDigit = GetFirstDigit(contents, false);
+            var lastDigit = GetLastDigit(line);
             if (string.IsNullOrEmpty(lastDigit))
             {
                 return int.Parse(firstDigit + firstDigit);
             }
             return int.Parse(firstDigit + lastDigit);
         }
-
-        private static int GetDigitData(string line)
+        private static string GetLastDigit(string contents)
         {
+            char[] array = contents.ToCharArray();
+            Array.Reverse(array);
+            contents = new string(array);
+            return GetFirstDigit(contents, true);
+        }
+        private static string GetFirstDigit(string contents, bool reverse)
+        {
+            while (!string.IsNullOrEmpty(contents))
+            {
+                var digit = contents.Substring(0, 1);
+                if (int.TryParse(digit.ToString(), out var result))
+                {
+                    return result.ToString();
+                }
+                else
+                {
+                    var digitData = GetDigitData(contents, reverse);
+                    if (digitData != -1)
+                    {
+                        return digitData.ToString();
+                    }
+                    contents = contents.Substring(1);
+                }
+            }
+            return "";
+        }
 
+        private static int GetDigitData(string line, bool reverse)
+        {
+            if (reverse)
+            {
+                return GetReverseDigitData(line);
+            }
+            return GetStandardDigitData(line);
 
-            if (line.StartsWith("one"))
+        }
+
+        private static int GetReverseDigitData(string line)
+        {
+            if (line.StartsWith("eno"))
             {
                 return 1;
             }
 
 
+            if (line.StartsWith("owt"))
+            {
+                return 2;
+            }
+
+
+            if (line.StartsWith("eerht"))
+            {
+                return 3;
+            }
+            if (line.StartsWith("ruof"))
+            {
+                return 4;
+            }
+            if (line.StartsWith("evif"))
+            {
+                return 5;
+            }
+            if (line.StartsWith("xis"))
+            {
+                return 6;
+            }
+            if (line.StartsWith("neves"))
+            {
+                return 7;
+            }
+            if (line.StartsWith("thgie"))
+            {
+                return 8;
+            }
+            if (line.StartsWith("enin"))
+            {
+                return 9;
+            }
+            return -1;
+        }
+
+        private static int GetStandardDigitData(string line)
+        {
+            if (line.StartsWith("one"))
+            {
+                return 1;
+            }
             if (line.StartsWith("two"))
             {
                 return 2;
