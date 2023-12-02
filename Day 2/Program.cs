@@ -23,6 +23,9 @@
             var gameContents = line.Split(":");
             var gameID = gameContents[0].Replace("game ", "");
             var hands = gameContents[1].Split(";");
+            var green = 0;
+            var red = 0;
+            var blue = 0;
             foreach (var hand in hands)
             {
                 var cubes = hand.Split(",");
@@ -33,21 +36,21 @@
                     switch (pair[1])
                     {
                         case "green":
-                            if (number > 13)
+                            if (number > green)
                             {
-                                return -1;
+                                green = number;
                             }
                             break;
                         case "blue":
-                            if (number > 14)
+                            if (number > blue)
                             {
-                                return -1;
+                                blue = number;
                             }
                             break;
                         case "red":
-                            if (number > 12)
+                            if (number > red)
                             {
-                                return -1;
+                                red = number;
                             }
                             break;
                         default:
@@ -55,7 +58,34 @@
                     }
                 }
             }
-            return int.Parse(gameID);
+            var total = 0;
+            if (red != 0)
+            {
+                total = red;
+            }
+            if (blue != 0)
+            {
+                if (total != 0)
+                {
+                    total = total * blue;
+                }
+                else
+                {
+                    total = blue;
+                }
+            }
+            if (green != 0)
+            {
+                if (total != 0)
+                {
+                    total = total * green;
+                }
+                else
+                {
+                    total = green;
+                }
+            }
+            return total;
         }
     }
 }
