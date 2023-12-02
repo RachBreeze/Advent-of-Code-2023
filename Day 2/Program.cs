@@ -1,35 +1,27 @@
-﻿using Day2;
-
-namespace Day1
+﻿namespace Day1
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            var games = GetGames();
-            var tooMany = games.Where(x => x.RedBalls > 12 || x.GreenBalls > 13 || x.BlueBalls > 14).Select(x => x.GameID).ToList();
-            var validGames = games.Where(x => !tooMany.Contains(x.GameID));
-            var total = validGames.Sum(x => x.GameID);
-            Console.WriteLine(total);
-        }
-        static List<Game> GetGames()
-        {
-
             var lines = File.ReadAllLines("./../../../input.txt");
-            var games = new List<Game>();
+            var total = 0;
             for (var i = 0; i < lines.Length; i += 1)
             {
-                games.Add(ReadGame(lines[i]));
+                var gameID = ReadGame(lines[i]);
+                if (gameID > -1)
+                {
+                    total += gameID;
+                }
             }
-            return games;
+            Console.WriteLine(total);
         }
 
-        private static Game ReadGame(string line)
+        private static int ReadGame(string line)
         {
             line = line.ToLower();
             var gameContents = line.Split(":");
             var gameID = gameContents[0].Replace("game ", "");
-            var game = new Game { GameID = int.Parse(gameID) };
             var hands = gameContents[1].Split(";");
             foreach (var hand in hands)
             {
@@ -41,20 +33,29 @@ namespace Day1
                     switch (pair[1])
                     {
                         case "green":
-                            game.GreenBalls += number;
+                            if (number > 13)
+                            {
+                                return -1;
+                            }
                             break;
                         case "blue":
-                            game.BlueBalls += number;
+                            if (number > 14)
+                            {
+                                return -1;
+                            }
                             break;
                         case "red":
-                            game.RedBalls += number;
+                            if (number > 12)
+                            {
+                                return -1;
+                            }
                             break;
                         default:
                             throw new Exception("Unrecognised Colour" + pair[1]);
                     }
                 }
             }
-            return game;
+            return int.Parse(gameID);
         }
     }
 }
